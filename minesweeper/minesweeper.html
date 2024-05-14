@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="minesweeper_style.css" />
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="game-wrapper">
+        <div class="opening-page">
+          <div class="opening-text">
+            <h1>Minesweeper game</h1>
+            <p>
+              Find all hidden bombs in the board, <br />play with the mouse:
+              <br />Left click - open cell <br />Right click - mark as bomb
+            </p>
+          </div>
+          <br />
+          <div class="opening-buttons">
+            <input type="text" placeholder="Enter your name here" />
+            <button onclick="createboard();pageSwitch(`game`);startTimer()">
+              Start new game
+            </button>
+            <button onclick="printScoreBoard();pageSwitch(`history`)">
+              Score board
+            </button>
+          </div>
+        </div>
+
+        <div class="game-play-page hidden-page">
+          <div class="grid" id="myGrid"></div>
+          <div class="game-buttons">
+            <button onclick="pageSwitch()">home page</button>
+            <button id="timer-btn"></button>
+            <button id="bombs-counter"></button>
+          </div>
+        </div>
+        <div class="score-board-page hidden-page">
+          <div class="score-board-container">
+            <table>
+              <tr>
+                <th>Place</th>
+                <th>Name</th>
+                <th>Time</th>
+                <th>Date</th>
+              </tr>
+              <tbody class="tbody"></tbody>
+            </table>
+          </div>
+          <button onclick="pageSwitch()">Back</button>
+        </div>
+      </div>
+    </div>
+    <!--  -->
+    <script src="./minesweeper-script.js"></script>
+  </body>
+</html>

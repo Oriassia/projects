@@ -1,0 +1,166 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.game-wrapper {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.opening-page {
+  padding: 40px;
+  /* display: flex; */
+  /* flex-direction: column; */
+}
+
+.opening-text {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 28px;
+}
+
+.opening-buttons {
+  text-align: center;
+}
+
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background-color: lightgreen;
+}
+
+button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.game-play-page {
+  padding: 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  grid-gap: 1px;
+  /* margin: 0 auto; */
+}
+
+.grid-item {
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  align-content: center;
+  height: 50px;
+  width: 50px;
+  border: solid 1px lightgray;
+}
+
+.hidden {
+  text-indent: -9999px;
+  box-shadow: 3px 3px 3px;
+  background-color: lightgrey;
+}
+
+.hidden-page {
+  display: none;
+}
+
+/* .bomb-cell {
+  background-color: #ff5252;
+  color: #fff;
+} */
+
+.flagged {
+  background-color: #ff5252;
+  text-indent: 0;
+}
+
+.fa-land-mine-on {
+  z-index: 1;
+}
+
+.open-bomb {
+  background-color: #ff5252;
+}
+
+.game-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.score-board-page {
+  padding: 20px;
+}
+
+.score-board-container {
+  margin-bottom: 10px;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+}
+
+table {
+  text-align: center;
+  border-collapse: collapse;
+  width: 450px;
+}
+
+th {
+  height: 30px;
+  width: 80px;
+  border-bottom: solid black 3px;
+}
+
+td,
+th {
+  padding: 10px;
+}
+
+tr:hover {
+  background-color: coral;
+}
+
+tr:nth-child(even) {
+  background-color: #e7e9eb;
+}
