@@ -73,8 +73,6 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  grid-gap: 1px;
-  /* margin: 0 auto; */
 }
 
 .grid-item {
@@ -87,7 +85,7 @@ button:hover {
   align-content: center;
   height: 50px;
   width: 50px;
-  border: solid 1px lightgray;
+  border: solid 1px black;
 }
 
 .hidden {

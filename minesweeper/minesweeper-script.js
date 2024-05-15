@@ -21,7 +21,6 @@ let gridCells = gridContainer.children
 function getScoreBoardLS(){
   let scorBoardString = localStorage.getItem("scoreBoardData")
   return scorBoardString ? JSON.parse(scorBoardString) : []
-
 }
 
 
@@ -169,8 +168,14 @@ function bombsAroundCell(cell_index) {
 function checkPressedCell(item){
   if (item.classList.contains("hidden")){
     if(!item.classList.contains("bomb-cell")){
-      const value = item.dataset.value;
-      openCell(value)
+      const index = item.dataset.value;
+      item.classList.remove("hidden")
+      if(item.id == ""){
+        checkLinkedElems(index)
+      }
+      else{
+        item.textContent = item.id;
+      }
     }
     // check for bomb
     else{
@@ -203,7 +208,7 @@ function bombHit(){
     bombItem.classList.add("open-bomb");
     bombItem.innerHTML = bombIcon
     });
-updateScoreBoard()
+// updateScoreBoard()
 }
 
 function updateScoreBoard(){
@@ -238,47 +243,190 @@ function flagItem(item){
     document.getElementById("bombs-counter").textContent = `Remaining bombs: ${flagsCounter}`
   }
 
-function openCell(cell_index) {
-  if (gridCells[cell_index].classList.contains("hidden") 
-    && !gridCells[cell_index].classList.contains("bomb-cell")){
+// function openCell(cell_index) {
+//   if (gridCells[cell_index].classList.contains("hidden") 
+//     && !gridCells[cell_index].classList.contains("bomb-cell")){
 
-    if(gridCells[cell_index].classList.contains("flagged")){
-      gridCells[cell_index].classList.remove("flagged")
+//     if(! gridCells[cell_index].classList.contains("flagged")){
+//       // gridCells[cell_index].classList.remove("flagged")
 
-      try {
-        gridCells[cell_index].querySelector("i").remove();
-      } catch (error) {
-        console.error("An error occurred while removing the icon:", error);
-      }
-      }
-      gridCells[cell_index].textContent = gridCells[cell_index].id
-      gridCells[cell_index].classList.remove("hidden");
+//       // try {
+//       //   gridCells[cell_index].querySelector("i").remove();
+//       // } catch (error) {
+//       //   console.error("An error occurred while removing the icon:", error);
+//       // }
+//       gridCells[cell_index].textContent = gridCells[cell_index].id
+//       gridCells[cell_index].classList.remove("hidden");
 
-    if (gridCells[cell_index].id == "") {
-        checkLinkedElems(cell_index);
-      }
-  }
-}
+//     if (gridCells[cell_index].id == "") {
+//         checkLinkedElems(cell_index);
+//       }
+
+//       }
+//   }
+// }
+
+// function checkLinkedElems(input_index) {
+//   let cell_index = Number(input_index);
+//   const directions = [-1, 1, -columns, -columns - 1, -columns + 1, columns, columns + 1, columns - 1];
+
+//   for (const direction of directions) {
+//     const neighbor_index = cell_index + direction;
+//     const neighborCell = gridCells[neighbor_index];
+
+//     if (neighborCell && !neighborCell.classList.contains("flagged")) {
+//       neighborCell.classList.remove("hidden");
+//       neighborCell.textContent = neighborCell.id;
+
+//       if (neighborCell.id === "") {
+//         checkLinkedElems(neighbor_index);
+//       }
+//     }
+//   }
+// }
+
+
+// function checkLinkedElems(input_index) {
+//   const cell_index = Number(input_index);
+//   const validNeighbors = [];
+
+//   // Check right neighbor
+//   if (cell_index % columns !== columns - 1) {
+//     validNeighbors.push(cell_index + 1);
+//   }
+  
+//   // Check left neighbor
+//   if (cell_index % columns !== 0) {
+//     validNeighbors.push(cell_index - 1);
+//   }
+  
+//   // Check top neighbor
+//   if (cell_index >= columns) {
+//     validNeighbors.push(cell_index - columns);
+
+//     // Check top left neighbor
+//     if (cell_index % columns !== 0) {
+//       validNeighbors.push(cell_index - columns - 1);
+//     }
+
+//     // Check top right neighbor
+//     if (cell_index % columns !== columns - 1) {
+//       validNeighbors.push(cell_index - columns + 1);
+//     }
+//   }
+  
+//   // Check bottom neighbor
+//   if (cell_index + columns < gridCells.length) {
+//     validNeighbors.push(cell_index + columns);
+
+//     // Check bottom right neighbor
+//     if (cell_index % columns !== columns - 1) {
+//       validNeighbors.push(cell_index + columns + 1);
+//     }
+
+//     // Check bottom left neighbor
+//     if (cell_index % columns !== 0) {
+//       validNeighbors.push(cell_index + columns - 1);
+//     }
+//   }
+
+//   // Process valid neighbors
+//   validNeighbors.forEach(neighborIndex => {
+//     let neighborCell = gridCells[neighborIndex];
+//     if (neighborCell && !neighborCell.classList.contains("flagged")) {
+//       neighborCell.classList.remove("hidden");
+//       neighborCell.textContent = neighborCell.id;
+//       if (neighborCell.id === "") {
+//         checkLinkedElems(neighborIndex);
+//       }
+//     }
+//   });
+// }
+
 
 function checkLinkedElems(input_index) {
   let cell_index = Number(input_index);
-  // Check right neighbor
-  if (cell_index % columns !== columns - 1) {
-      openCell(cell_index + 1);
+     // Check right neighbor
+  if (cell_index % columns !== columns - 1){
+    if(!gridCells[cell_index +1].classList.contains("flagged") && gridCells[cell_index +1].classList.contains("hidden")){
+      gridCells[cell_index +1].classList.remove("hidden");
+      gridCells[cell_index + 1].textContent = gridCells[cell_index + 1].id
+      if(gridCells[cell_index + 1].id == ""){
+        checkLinkedElems(cell_index + 1)
+      }
+    }
   }
-  // Check left neighbor
+    
+      // Check left neighbor
   if (cell_index % columns !== 0) {
-      openCell(cell_index - 1);
+    if(!gridCells[cell_index - 1].classList.contains("flagged") && gridCells[cell_index +1].classList.contains("hidden")){
+      gridCells[cell_index - 1].classList.remove("hidden");
+      gridCells[cell_index - 1].textContent = gridCells[cell_index - 1].id
+      if(gridCells[cell_index - 1].id == ""){
+        checkLinkedElems(cell_index - 1)
+      }
+    }
   }
+
   // Check top neighbor
-  if (cell_index >= columns) {
-      openCell(cell_index - columns);
+  if (cell_index >= columns){
+    if(!gridCells[cell_index - columns].classList.contains("flagged") && gridCells[cell_index - columns].classList.contains("hidden")){
+      gridCells[cell_index - columns].classList.remove("hidden");
+      gridCells[cell_index - columns].textContent = gridCells[cell_index - columns].id
+      if(gridCells[cell_index - columns].id == ""){
+        checkLinkedElems(cell_index - columns)
+      }
+    }
+
+      // Check top left neighbor
+      if(!gridCells[cell_index - columns - 1].classList.contains("flagged") && gridCells[cell_index - columns - 1].classList.contains("hidden")){
+        gridCells[cell_index - columns - 1].classList.remove("hidden");
+        gridCells[cell_index - columns - 1].textContent = gridCells[cell_index - columns - 1].id
+        if(gridCells[cell_index - columns - 1].id == ""){
+          checkLinkedElems(cell_index - columns - 1)
+        }
+    }
+    
+    // Check top right neighbor
+    if(!gridCells[cell_index - columns + 1].classList.contains("flagged") && gridCells[cell_index - columns + 1].classList.contains("hidden")){
+      gridCells[cell_index - columns + 1].classList.remove("hidden");
+      gridCells[cell_index - columns + 1].textContent = gridCells[cell_index - columns + 1].id
+      if(gridCells[cell_index - columns + 1].id == ""){
+        checkLinkedElems(cell_index - columns + 1)
+      }
   }
+  }
+
   // Check bottom neighbor
-  if (cell_index + columns < gridCells.length) {
-      openCell(cell_index + columns);
+  if (cell_index + columns < gridCells.length){
+  if(!gridCells[cell_index + columns].classList.contains("flagged") && gridCells[cell_index + columns].classList.contains("hidden")){
+    gridCells[cell_index + columns].classList.remove("hidden");
+    gridCells[cell_index + columns].textContent = gridCells[cell_index + columns].id
+    if(gridCells[cell_index + columns].id == ""){
+      checkLinkedElems(cell_index + columns)
+    }
+}
+
+// Check bottom right neighbor
+if(!gridCells[cell_index + columns + 1].classList.contains("flagged") && gridCells[cell_index + columns + 1].classList.contains("hidden")){
+  gridCells[cell_index + columns + 1].classList.remove("hidden");
+  gridCells[cell_index + columns + 1].textContent = gridCells[cell_index + columns + 1].id
+  if(gridCells[cell_index + columns + 1].id == ""){
+    checkLinkedElems(cell_index + columns + 1)
   }
 }
+
+// Check bottom left neighbor
+if(!gridCells[cell_index + columns - 1].classList.contains("flagged") && gridCells[cell_index + columns - 1].classList.contains("hidden")){
+  gridCells[cell_index + columns - 1].classList.remove("hidden");
+  gridCells[cell_index + columns - 1].textContent = gridCells[cell_index + columns - 1].id
+  if(gridCells[cell_index + columns - 1].id == ""){
+    checkLinkedElems(cell_index + columns - 1)
+  }
+}
+}
+}
+   
 
 function checkFinish(){
   let allHiddenCells = document.querySelectorAll(".hidden");
