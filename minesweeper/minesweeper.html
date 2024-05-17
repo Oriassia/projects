@@ -25,7 +25,7 @@
           <div class="opening-buttons">
             <input type="text" placeholder="Enter your name (optional)" />
             <button
-              onclick="mediumBoard();pageSwitch(`game`);clearInterval(timerInterval); startTimer()"
+              onclick="initializeBoard(`medium`);pageSwitch(`game`);clearInterval(timerInterval); startTimer()"
             >
               Start new game
             </button>
@@ -36,31 +36,41 @@
         </div>
 
         <div class="game-play-page hidden-page">
+          <div class="game-level-buttons">
+            <button
+              style="background-color: #1da11b; border-color: #333"
+              onclick="initializeBoard(`easy`);clearInterval(timerInterval); startTimer()"
+            >
+              Easy
+            </button>
+            <button
+              style="background-color: #e0a11a"
+              onclick="initializeBoard(`medium`);clearInterval(timerInterval); startTimer()"
+            >
+              medium
+            </button>
+            <button
+              style="background-color: #c2433d"
+              onclick="initializeBoard(`hard`);clearInterval(timerInterval); startTimer()"
+            >
+              hard
+            </button>
+          </div>
           <div class="board-grid"></div>
           <div class="game-buttons">
-            <!-- <label for="bombs-input">bombs amount:</label>
-            <input id="bombs-input" type="number" placeholder="Enter number" />
-            <button onclick="updateBombsAmount()">Go</button> -->
-            <button
-              onclick="easyBoard();clearInterval(timerInterval); startTimer()"
-            >
-              Easy level
-            </button>
-            <button
-              onclick="mediumBoard();clearInterval(timerInterval); startTimer()"
-            >
-              medium level
-            </button>
-            <button
-              onclick="hardBoard();clearInterval(timerInterval); startTimer()"
-            >
-              hard level
-            </button>
-            <button onclick="pageSwitch()">home page</button>
-            <button onclick="createboard();startTimer()">Reset</button>
-
-            <button id="timer-btn"></button>
-            <button id="bombs-counter"></button>
+            <div>
+              <button onclick="pageSwitch()">
+                <i class="fa-solid fa-house"></i>
+              </button>
+              <button
+                id="restart-button"
+                onclick="createBoard(document.querySelector(`.board-grid`).id);clearInterval(timerInterval);startTimer()"
+              >
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+              <button id="timer-btn"></button>
+              <button id="bombs-counter"></button>
+            </div>
           </div>
         </div>
         <div class="score-board-page hidden-page">
@@ -70,6 +80,7 @@
                 <th>Place</th>
                 <th>Name</th>
                 <th>Time</th>
+                <th>Level</th>
                 <th>Date</th>
               </tr>
               <tbody class="tbody"></tbody>

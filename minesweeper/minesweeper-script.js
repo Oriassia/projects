@@ -22,37 +22,29 @@ function getScoreBoardLS(){
   return scorBoardString ? JSON.parse(scorBoardString) : []
 }
 
-function easyBoard(){
-  rows = 8
-  columns = 8
-  cellsToFill = 10
-  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
-  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
-  createboard()
+
+// Initialize board based on difficulty level
+function initializeBoard(level) {
+  switch (level) {
+    case 'easy':
+      rows = 8; columns = 8; cellsToFill = 10;
+      break;
+    case 'medium':
+      rows = 10; columns = 10; cellsToFill = 13;
+      break;
+    case 'hard':
+      rows = 15; columns = 15; cellsToFill = 17;
+      break;
+  }
+  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+  gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+  createBoard(level);
 }
 
-function mediumBoard(){
-  rows = 10
-  columns = 10
-  cellsToFill = 12
-  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
-  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
-  createboard()
-}
-
-function hardBoard(){
-  rows = 15
-  columns = 15
-  cellsToFill = 17
-  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
-  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
-  createboard()
-}
-
-
-function createboard() {
+function createBoard(gameLevel) {
   // Create the grid dynamically
      gridContainer.replaceChildren();
+     gridContainer.id = gameLevel;
      grid_size = rows * columns;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
@@ -67,7 +59,7 @@ function createboard() {
       gridItem.addEventListener("mouseup", (e) => {
         if (gridItem.classList.contains("hidden")){
           if(e.button == 0 && !gridItem.classList.contains("flagged")){
-              checkPressedCell(gridItem);
+              checkPressedCell(gridItem.dataset.value);
               checkFinish()
             }
           else if(e.button == 2){
@@ -85,7 +77,6 @@ function createboard() {
   insertRandomBombs();
   setBombsIndicators();
   flagsCounter = cellsToFill
-  
 }
 
 // Function to generate a random integer between min and max (inclusive)
@@ -93,7 +84,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Function to insert bomb-class into 10 random cells in the grid
+// Function to insert bomb-id into random cells in the grid
 function insertRandomBombs() {
   // const totalCells = rows * columns;
   filledCellsCounter = new Set(); // To keep track of filled cells
@@ -103,7 +94,7 @@ function insertRandomBombs() {
     const randomIndex = getRandomInt(0, gridCellsArray.length - 1);
     if (!filledCellsCounter.has(randomIndex)) {
       filledCellsCounter.add(randomIndex);
-      gridCellsArray[randomIndex].classList.add("bomb-cell")
+      gridCellsArray[randomIndex].id = "bomb"
     }
   }    
   flagsCounter = cellsToFill
@@ -112,97 +103,119 @@ function insertRandomBombs() {
 }
 
 function setBombsIndicators() {
-  for (let i = 0; i < grid_size; i++) {
-    if (!gridCellsArray[i].classList.contains("bomb-cell")) {
-      bombsAroundCell(i);
+  for (let cell_index = 0; cell_index < gridCellsArray.length; cell_index++) {
+    if (gridCellsArray[cell_index].id !== "bomb") {
+      let x_counter = 0;
+
+      const isBomb = (i) => gridCellsArray[i].id === "bomb"? true:false;
+
+      // Check right neighbor
+      if ((cell_index + 1) % columns !== 0 && isBomb(cell_index + 1)) {
+        x_counter++;
+      }
+      
+      // Check left neighbor
+      if (cell_index % columns !== 0 && isBomb(cell_index - 1)) {
+        x_counter++;
+      }
+
+      // Check top neighbor
+      if (cell_index >= columns && isBomb(cell_index - columns)) {
+        x_counter++;
+      }
+
+      // Check top right neighbor
+      if (cell_index >= columns && (cell_index + 1) % columns !== 0 && isBomb(cell_index - columns + 1)) {
+        x_counter++;
+      }
+
+      // Check top left neighbor
+      if (cell_index >= columns && cell_index % columns !== 0 && isBomb(cell_index - columns - 1)) {
+        x_counter++;
+      }
+
+      // Check bottom neighbor
+      if (cell_index + columns < gridCellsArray.length && isBomb(cell_index + columns)) {
+        x_counter++;
+      }
+
+      // Check bottom right neighbor
+      if (cell_index + columns < gridCellsArray.length && (cell_index + 1) % columns !== 0 && isBomb(cell_index + columns + 1)) {
+        x_counter++;
+      }
+
+      // Check bottom left neighbor
+      if (cell_index + columns < gridCellsArray.length && cell_index % columns !== 0 && isBomb(cell_index + columns - 1)) {
+        x_counter++;
+      }
+
+      gridCellsArray[cell_index].id = x_counter > 0 ? String(x_counter) : "";
     }
   }
 }
 
-function bombsAroundCell(cell_index) {
-  let x_counter = 0;
-  // Check right neighbor
-  if ((cell_index + 1) % columns !== 0) {
-    if (gridCellsArray[cell_index + 1].classList.contains("bomb-cell")) {
-      x_counter++;
-    }
-  }
-
-  // Check left neighbor
-  if (cell_index % columns !== 0) {
-    if (gridCellsArray[cell_index - 1].classList.contains("bomb-cell")) {
-      x_counter++;
-    }
-  }
-
-  // Check top neighbor
-  if (cell_index >= columns) {
-    if (
-      gridCellsArray[cell_index - columns].classList.contains("bomb-cell")) {
-      x_counter++;
-    }
-
-    // Check top right neighbor
-    if ((cell_index + 1) % columns !== 0) {
-      if (
-        gridCellsArray[cell_index - columns + 1].classList.contains("bomb-cell")) {
-        x_counter++;
-      }
-    }
-
-    // Check top left neighbor
-    if (cell_index % columns !== 0) {
-      if (
-        gridCellsArray[cell_index - columns - 1].classList.contains("bomb-cell")) {
-        x_counter++;
-      }
-    }
-  }
-
-  // Check bottom neighbor
-  if (cell_index + columns < grid_size) {
-    if (
-      gridCellsArray[cell_index + columns].classList.contains("bomb-cell")
-    ) {
-      x_counter++;
-    }
-
-    // Check bottom right neighbor
-    if ((cell_index + 1) % columns !== 0) {
-      if (
-        gridCellsArray[cell_index + columns + 1].classList.contains("bomb-cell")
-      ) {
-        x_counter++;
-      }
-    }
-
-    // Check bottom left neighbor
-    if (cell_index % columns !== 0) {
-      if (
-        gridCellsArray[cell_index + columns - 1].classList.contains("bomb-cell")
-      ) {
-        x_counter++;
-      }
-    }
-  }
-  if(x_counter > 0)
-    gridCellsArray[cell_index].id = x_counter;
-  else{
-    gridCellsArray[cell_index].id = "";
-  }
-}
-
-function checkPressedCell(item){
-  if (item.classList.contains("hidden")){
-    if(!item.classList.contains("bomb-cell")){
-      const value = item.dataset.value;
-      openCell(value)
+function checkPressedCell(stringIndex){
+  let cellIndex = Number(stringIndex)
+  if (gridCellsArray[cellIndex].classList.contains("hidden")){
+    if(gridCellsArray[cellIndex].id !== "bomb"){
+      openCell(cellIndex)
     }
     // check for bomb
     else{
       bombHit()
 }
 }
+}
+
+function openCell(cell_index) {
+  if (gridCellsArray[cell_index].classList.contains("hidden") 
+    && !gridCellsArray[cell_index].classList.contains("flagged")){
+
+      gridCellsArray[cell_index].textContent = gridCellsArray[cell_index].id
+      gridCellsArray[cell_index].classList.remove("hidden");
+
+    if (gridCellsArray[cell_index].id == "") {
+          // Check right neighbor
+        if ((cell_index + 1) % columns !== 0 ) {
+          openCell(cell_index + 1);
+        }
+        
+        // Check left neighbor
+        if (cell_index % columns !== 0 ) {
+          openCell(cell_index - 1);
+        }
+
+        // Check top neighbor
+        if (cell_index >= columns ) {
+          openCell(cell_index - columns);
+        }
+
+        // Check top right neighbor
+        if (cell_index >= columns && (cell_index + 1) % columns !== 0) {
+          openCell(cell_index - columns + 1);
+        }
+
+        // Check top left neighbor
+        if (cell_index >= columns && cell_index % columns !== 0 ) {
+          openCell(cell_index - columns - 1);
+        }
+
+        // Check bottom neighbor
+        if (cell_index + columns < gridCellsArray.length) {
+          openCell(cell_index + columns);
+        }
+
+        // Check bottom right neighbor
+        if (cell_index + columns < gridCellsArray.length && (cell_index + 1) % columns !== 0) {
+          openCell(cell_index + columns + 1);
+        }
+
+        // Check bottom left neighbor
+        if (cell_index + columns < gridCellsArray.length && cell_index % columns !== 0 ) {
+          openCell(cell_index + columns - 1);
+        }
+     }
+  }
 }
 
 function bombHit(){
@@ -217,12 +230,12 @@ function bombHit(){
     if(gridItem.classList.contains("flagged")){
       gridItem.classList.remove("flagged");    
     }
-    if (!gridItem.classList.contains("bomb-cell")){
+    if (gridItem.id != "bomb"){
         gridItem.textContent = gridItem.id
     }
 });
 
-  document.querySelectorAll(".bomb-cell").forEach(bombItem => {
+  document.querySelectorAll("#bomb").forEach(bombItem => {
     if(bombItem.querySelector("i")){
       bombItem.querySelector("i").remove();
     }
@@ -232,11 +245,11 @@ function bombHit(){
 // updateScoreBoard()
 }
 
-function updateScoreBoard(){
+function updateScoresData(){
   let timeAsNumber = Number(minutes_count.toString().padStart(2,`0`) + seconds_count.toString().padStart(2,`0`));
 
   scoreBoard.push({"name":input_name.value, "time": timeAsNumber, 
-  "timeStr" : timerContent.textContent, "date": getCurrentDate()})
+  "timeStr" : timerContent.textContent, "gameLevel":gridContainer.id, "date": getCurrentDate()})
 
   // sort by time
   scoreBoard.sort((a, b) => a.time - b.time);
@@ -254,7 +267,7 @@ function flagItem(item){
     }
     else{
       item.classList.add("flagged");
-      item.innerHTML += flagIcon ////////// buggggggggggg
+      item.innerHTML += flagIcon 
       flagsCounter --;
     }
     updateFlagsCounter()
@@ -264,53 +277,11 @@ function flagItem(item){
     document.getElementById("bombs-counter").textContent = `Remaining bombs: ${flagsCounter}`
   }
 
-function openCell(cell_index) {
-  if (gridCellsArray[cell_index].classList.contains("hidden") 
-    && !gridCellsArray[cell_index].classList.contains("bomb-cell")){
-
-    if(gridCellsArray[cell_index].classList.contains("flagged")){
-      gridCellsArray[cell_index].classList.remove("flagged")
-
-      try {
-        gridCellsArray[cell_index].querySelector("i").remove();
-      } catch (error) {
-        console.error("An error occurred while removing the icon:", error);
-      }
-      }
-      gridCellsArray[cell_index].textContent = gridCellsArray[cell_index].id
-      gridCellsArray[cell_index].classList.remove("hidden");
-
-    if (gridCellsArray[cell_index].id == "") {
-        checkLinkedElems(cell_index);
-      }
-  }
-}
-
-function checkLinkedElems(input_index) {
-  let cell_index = Number(input_index);
-  // Check right neighbor
-  if (cell_index % columns !== columns - 1) {
-      openCell(cell_index + 1);
-  }
-  // Check left neighbor
-  if (cell_index % columns !== 0) {
-      openCell(cell_index - 1);
-  }
-  // Check top neighbor
-  if (cell_index >= columns) {
-      openCell(cell_index - columns);
-  }
-  // Check bottom neighbor
-  if (cell_index + columns < gridCellsArray.length) {
-      openCell(cell_index + columns);
-  }
-}
-
 function checkFinish(){
   let allHiddenCells = document.querySelectorAll(".hidden");
   if(allHiddenCells.length > 0) {
     for (let cell of allHiddenCells){
-      if (!(cell.classList.contains("bomb-cell") 
+      if (!(cell.id == "bomb" 
         && cell.classList.contains("flagged"))){
         return "" ;
       }
@@ -319,10 +290,9 @@ function checkFinish(){
       alert(`Congrats!! You finished the game :) \nTime : ${timerContent.textContent} minutes`);
     }, 1000);
     clearInterval(timerInterval)
-    updateScoreBoard()
+    updateScoresData()
   }
 }
-
 
 function startTimer() {
   seconds_count = 0;
@@ -380,17 +350,20 @@ function printScoreBoard() {
     let placeCell = document.createElement("td");
     let nameCell = document.createElement("td");
     let timeCell = document.createElement("td");
+    let levelCell = document.createElement("td");
     let dateCell = document.createElement("td");
 
     placeCell.textContent = place;
-    nameCell.textContent = player.name;
+    nameCell.textContent = player.name == "" ? "Unknown" : player.name;
     timeCell.textContent = player.timeStr;
+    levelCell.textContent = player.gameLevel;
     dateCell.textContent = player.date;
 
     // Append cells to the row
     row.appendChild(placeCell);
     row.appendChild(nameCell);
     row.appendChild(timeCell);
+    row.appendChild(levelCell);
     row.appendChild(dateCell);
 
     // Append the row to the table body
