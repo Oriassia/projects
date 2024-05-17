@@ -24,7 +24,9 @@
           <br />
           <div class="opening-buttons">
             <input type="text" placeholder="Enter your name (optional)" />
-            <button onclick="createboard();pageSwitch(`game`);startTimer()">
+            <button
+              onclick="mediumBoard();pageSwitch(`game`);clearInterval(timerInterval); startTimer()"
+            >
               Start new game
             </button>
             <button onclick="printScoreBoard();pageSwitch(`history`)">
@@ -34,9 +36,29 @@
         </div>
 
         <div class="game-play-page hidden-page">
-          <div class="grid" id="myGrid"></div>
+          <div class="board-grid"></div>
           <div class="game-buttons">
+            <!-- <label for="bombs-input">bombs amount:</label>
+            <input id="bombs-input" type="number" placeholder="Enter number" />
+            <button onclick="updateBombsAmount()">Go</button> -->
+            <button
+              onclick="easyBoard();clearInterval(timerInterval); startTimer()"
+            >
+              Easy level
+            </button>
+            <button
+              onclick="mediumBoard();clearInterval(timerInterval); startTimer()"
+            >
+              medium level
+            </button>
+            <button
+              onclick="hardBoard();clearInterval(timerInterval); startTimer()"
+            >
+              hard level
+            </button>
             <button onclick="pageSwitch()">home page</button>
+            <button onclick="createboard();startTimer()">Reset</button>
+
             <button id="timer-btn"></button>
             <button id="bombs-counter"></button>
           </div>

@@ -1,10 +1,11 @@
 // Define the grid size
-const rows = 10;
-const columns = 10;
+let rows;
+let columns ;
 let filledCellsCounter;
 let cellsToFill;
 let flagsCounter;
-const grid_size = rows * columns;
+let gridCellsArray;
+let grid_size;
 let seconds_count;
 let minutes_count
 let timerContent;
@@ -14,24 +15,50 @@ let flagIcon = `<i class="fa-solid fa-land-mine-on"></i>`
 let scoreBoard = getScoreBoardLS()
 let input_name = document.querySelector("input");
 // Get the grid container element
-const gridContainer = document.getElementById("myGrid");
-let gridCells = gridContainer.children
-
+const gridContainer = document.querySelector(".board-grid");
 
 function getScoreBoardLS(){
   let scorBoardString = localStorage.getItem("scoreBoardData")
   return scorBoardString ? JSON.parse(scorBoardString) : []
 }
 
+function easyBoard(){
+  rows = 8
+  columns = 8
+  cellsToFill = 10
+  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
+  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
+  createboard()
+}
+
+function mediumBoard(){
+  rows = 10
+  columns = 10
+  cellsToFill = 12
+  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
+  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
+  createboard()
+}
+
+function hardBoard(){
+  rows = 15
+  columns = 15
+  cellsToFill = 17
+  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 50px)`;
+  gridContainer.style.gridTemplateRows = `repeat(${rows}, 50px)`;
+  createboard()
+}
+
 
 function createboard() {
   // Create the grid dynamically
      gridContainer.replaceChildren();
+     grid_size = rows * columns;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
       // Create a grid item element
       const gridItem = document.createElement("div");
-      gridItem.className = "grid-item";
+      gridItem.classList.add("grid-item");
       gridItem.classList.add("hidden");
       gridItem.dataset.value = gridContainer.children.length ;
       gridItem.addEventListener("contextmenu", function(event) {
@@ -54,6 +81,7 @@ function createboard() {
       gridContainer.appendChild(gridItem);
     }
   }
+  gridCellsArray = gridContainer.children
   insertRandomBombs();
   setBombsIndicators();
   flagsCounter = cellsToFill
@@ -68,15 +96,14 @@ function getRandomInt(min, max) {
 // Function to insert bomb-class into 10 random cells in the grid
 function insertRandomBombs() {
   // const totalCells = rows * columns;
-  cellsToFill = 10;
   filledCellsCounter = new Set(); // To keep track of filled cells
 
   // add bomb class to 10 random cells 
   while (filledCellsCounter.size < cellsToFill) {
-    const randomIndex = getRandomInt(0, gridCells.length - 1);
+    const randomIndex = getRandomInt(0, gridCellsArray.length - 1);
     if (!filledCellsCounter.has(randomIndex)) {
       filledCellsCounter.add(randomIndex);
-      gridCells[randomIndex].classList.add("bomb-cell")
+      gridCellsArray[randomIndex].classList.add("bomb-cell")
     }
   }    
   flagsCounter = cellsToFill
@@ -86,7 +113,7 @@ function insertRandomBombs() {
 
 function setBombsIndicators() {
   for (let i = 0; i < grid_size; i++) {
-    if (!gridCells[i].classList.contains("bomb-cell")) {
+    if (!gridCellsArray[i].classList.contains("bomb-cell")) {
       bombsAroundCell(i);
     }
   }
@@ -96,14 +123,14 @@ function bombsAroundCell(cell_index) {
   let x_counter = 0;
   // Check right neighbor
   if ((cell_index + 1) % columns !== 0) {
-    if (gridCells[cell_index + 1].classList.contains("bomb-cell")) {
+    if (gridCellsArray[cell_index + 1].classList.contains("bomb-cell")) {
       x_counter++;
     }
   }
 
   // Check left neighbor
   if (cell_index % columns !== 0) {
-    if (gridCells[cell_index - 1].classList.contains("bomb-cell")) {
+    if (gridCellsArray[cell_index - 1].classList.contains("bomb-cell")) {
       x_counter++;
     }
   }
@@ -111,14 +138,14 @@ function bombsAroundCell(cell_index) {
   // Check top neighbor
   if (cell_index >= columns) {
     if (
-      gridCells[cell_index - columns].classList.contains("bomb-cell")) {
+      gridCellsArray[cell_index - columns].classList.contains("bomb-cell")) {
       x_counter++;
     }
 
     // Check top right neighbor
     if ((cell_index + 1) % columns !== 0) {
       if (
-        gridCells[cell_index - columns + 1].classList.contains("bomb-cell")) {
+        gridCellsArray[cell_index - columns + 1].classList.contains("bomb-cell")) {
         x_counter++;
       }
     }
@@ -126,7 +153,7 @@ function bombsAroundCell(cell_index) {
     // Check top left neighbor
     if (cell_index % columns !== 0) {
       if (
-        gridCells[cell_index - columns - 1].classList.contains("bomb-cell")) {
+        gridCellsArray[cell_index - columns - 1].classList.contains("bomb-cell")) {
         x_counter++;
       }
     }
@@ -135,7 +162,7 @@ function bombsAroundCell(cell_index) {
   // Check bottom neighbor
   if (cell_index + columns < grid_size) {
     if (
-      gridCells[cell_index + columns].classList.contains("bomb-cell")
+      gridCellsArray[cell_index + columns].classList.contains("bomb-cell")
     ) {
       x_counter++;
     }
@@ -143,7 +170,7 @@ function bombsAroundCell(cell_index) {
     // Check bottom right neighbor
     if ((cell_index + 1) % columns !== 0) {
       if (
-        gridCells[cell_index + columns + 1].classList.contains("bomb-cell")
+        gridCellsArray[cell_index + columns + 1].classList.contains("bomb-cell")
       ) {
         x_counter++;
       }
@@ -152,30 +179,24 @@ function bombsAroundCell(cell_index) {
     // Check bottom left neighbor
     if (cell_index % columns !== 0) {
       if (
-        gridCells[cell_index + columns - 1].classList.contains("bomb-cell")
+        gridCellsArray[cell_index + columns - 1].classList.contains("bomb-cell")
       ) {
         x_counter++;
       }
     }
   }
   if(x_counter > 0)
-    gridCells[cell_index].id = x_counter;
+    gridCellsArray[cell_index].id = x_counter;
   else{
-    gridCells[cell_index].id = "";
+    gridCellsArray[cell_index].id = "";
   }
 }
 
 function checkPressedCell(item){
   if (item.classList.contains("hidden")){
     if(!item.classList.contains("bomb-cell")){
-      const index = item.dataset.value;
-      item.classList.remove("hidden")
-      if(item.id == ""){
-        checkLinkedElems(index)
-      }
-      else{
-        item.textContent = item.id;
-      }
+      const value = item.dataset.value;
+      openCell(value)
     }
     // check for bomb
     else{
@@ -243,190 +264,47 @@ function flagItem(item){
     document.getElementById("bombs-counter").textContent = `Remaining bombs: ${flagsCounter}`
   }
 
-// function openCell(cell_index) {
-//   if (gridCells[cell_index].classList.contains("hidden") 
-//     && !gridCells[cell_index].classList.contains("bomb-cell")){
+function openCell(cell_index) {
+  if (gridCellsArray[cell_index].classList.contains("hidden") 
+    && !gridCellsArray[cell_index].classList.contains("bomb-cell")){
 
-//     if(! gridCells[cell_index].classList.contains("flagged")){
-//       // gridCells[cell_index].classList.remove("flagged")
+    if(gridCellsArray[cell_index].classList.contains("flagged")){
+      gridCellsArray[cell_index].classList.remove("flagged")
 
-//       // try {
-//       //   gridCells[cell_index].querySelector("i").remove();
-//       // } catch (error) {
-//       //   console.error("An error occurred while removing the icon:", error);
-//       // }
-//       gridCells[cell_index].textContent = gridCells[cell_index].id
-//       gridCells[cell_index].classList.remove("hidden");
+      try {
+        gridCellsArray[cell_index].querySelector("i").remove();
+      } catch (error) {
+        console.error("An error occurred while removing the icon:", error);
+      }
+      }
+      gridCellsArray[cell_index].textContent = gridCellsArray[cell_index].id
+      gridCellsArray[cell_index].classList.remove("hidden");
 
-//     if (gridCells[cell_index].id == "") {
-//         checkLinkedElems(cell_index);
-//       }
-
-//       }
-//   }
-// }
-
-// function checkLinkedElems(input_index) {
-//   let cell_index = Number(input_index);
-//   const directions = [-1, 1, -columns, -columns - 1, -columns + 1, columns, columns + 1, columns - 1];
-
-//   for (const direction of directions) {
-//     const neighbor_index = cell_index + direction;
-//     const neighborCell = gridCells[neighbor_index];
-
-//     if (neighborCell && !neighborCell.classList.contains("flagged")) {
-//       neighborCell.classList.remove("hidden");
-//       neighborCell.textContent = neighborCell.id;
-
-//       if (neighborCell.id === "") {
-//         checkLinkedElems(neighbor_index);
-//       }
-//     }
-//   }
-// }
-
-
-// function checkLinkedElems(input_index) {
-//   const cell_index = Number(input_index);
-//   const validNeighbors = [];
-
-//   // Check right neighbor
-//   if (cell_index % columns !== columns - 1) {
-//     validNeighbors.push(cell_index + 1);
-//   }
-  
-//   // Check left neighbor
-//   if (cell_index % columns !== 0) {
-//     validNeighbors.push(cell_index - 1);
-//   }
-  
-//   // Check top neighbor
-//   if (cell_index >= columns) {
-//     validNeighbors.push(cell_index - columns);
-
-//     // Check top left neighbor
-//     if (cell_index % columns !== 0) {
-//       validNeighbors.push(cell_index - columns - 1);
-//     }
-
-//     // Check top right neighbor
-//     if (cell_index % columns !== columns - 1) {
-//       validNeighbors.push(cell_index - columns + 1);
-//     }
-//   }
-  
-//   // Check bottom neighbor
-//   if (cell_index + columns < gridCells.length) {
-//     validNeighbors.push(cell_index + columns);
-
-//     // Check bottom right neighbor
-//     if (cell_index % columns !== columns - 1) {
-//       validNeighbors.push(cell_index + columns + 1);
-//     }
-
-//     // Check bottom left neighbor
-//     if (cell_index % columns !== 0) {
-//       validNeighbors.push(cell_index + columns - 1);
-//     }
-//   }
-
-//   // Process valid neighbors
-//   validNeighbors.forEach(neighborIndex => {
-//     let neighborCell = gridCells[neighborIndex];
-//     if (neighborCell && !neighborCell.classList.contains("flagged")) {
-//       neighborCell.classList.remove("hidden");
-//       neighborCell.textContent = neighborCell.id;
-//       if (neighborCell.id === "") {
-//         checkLinkedElems(neighborIndex);
-//       }
-//     }
-//   });
-// }
-
+    if (gridCellsArray[cell_index].id == "") {
+        checkLinkedElems(cell_index);
+      }
+  }
+}
 
 function checkLinkedElems(input_index) {
   let cell_index = Number(input_index);
-     // Check right neighbor
-  if (cell_index % columns !== columns - 1){
-    if(!gridCells[cell_index +1].classList.contains("flagged") && gridCells[cell_index +1].classList.contains("hidden")){
-      gridCells[cell_index +1].classList.remove("hidden");
-      gridCells[cell_index + 1].textContent = gridCells[cell_index + 1].id
-      if(gridCells[cell_index + 1].id == ""){
-        checkLinkedElems(cell_index + 1)
-      }
-    }
+  // Check right neighbor
+  if (cell_index % columns !== columns - 1) {
+      openCell(cell_index + 1);
   }
-    
-      // Check left neighbor
+  // Check left neighbor
   if (cell_index % columns !== 0) {
-    if(!gridCells[cell_index - 1].classList.contains("flagged") && gridCells[cell_index +1].classList.contains("hidden")){
-      gridCells[cell_index - 1].classList.remove("hidden");
-      gridCells[cell_index - 1].textContent = gridCells[cell_index - 1].id
-      if(gridCells[cell_index - 1].id == ""){
-        checkLinkedElems(cell_index - 1)
-      }
-    }
+      openCell(cell_index - 1);
   }
-
   // Check top neighbor
-  if (cell_index >= columns){
-    if(!gridCells[cell_index - columns].classList.contains("flagged") && gridCells[cell_index - columns].classList.contains("hidden")){
-      gridCells[cell_index - columns].classList.remove("hidden");
-      gridCells[cell_index - columns].textContent = gridCells[cell_index - columns].id
-      if(gridCells[cell_index - columns].id == ""){
-        checkLinkedElems(cell_index - columns)
-      }
-    }
-
-      // Check top left neighbor
-      if(!gridCells[cell_index - columns - 1].classList.contains("flagged") && gridCells[cell_index - columns - 1].classList.contains("hidden")){
-        gridCells[cell_index - columns - 1].classList.remove("hidden");
-        gridCells[cell_index - columns - 1].textContent = gridCells[cell_index - columns - 1].id
-        if(gridCells[cell_index - columns - 1].id == ""){
-          checkLinkedElems(cell_index - columns - 1)
-        }
-    }
-    
-    // Check top right neighbor
-    if(!gridCells[cell_index - columns + 1].classList.contains("flagged") && gridCells[cell_index - columns + 1].classList.contains("hidden")){
-      gridCells[cell_index - columns + 1].classList.remove("hidden");
-      gridCells[cell_index - columns + 1].textContent = gridCells[cell_index - columns + 1].id
-      if(gridCells[cell_index - columns + 1].id == ""){
-        checkLinkedElems(cell_index - columns + 1)
-      }
+  if (cell_index >= columns) {
+      openCell(cell_index - columns);
   }
-  }
-
   // Check bottom neighbor
-  if (cell_index + columns < gridCells.length){
-  if(!gridCells[cell_index + columns].classList.contains("flagged") && gridCells[cell_index + columns].classList.contains("hidden")){
-    gridCells[cell_index + columns].classList.remove("hidden");
-    gridCells[cell_index + columns].textContent = gridCells[cell_index + columns].id
-    if(gridCells[cell_index + columns].id == ""){
-      checkLinkedElems(cell_index + columns)
-    }
-}
-
-// Check bottom right neighbor
-if(!gridCells[cell_index + columns + 1].classList.contains("flagged") && gridCells[cell_index + columns + 1].classList.contains("hidden")){
-  gridCells[cell_index + columns + 1].classList.remove("hidden");
-  gridCells[cell_index + columns + 1].textContent = gridCells[cell_index + columns + 1].id
-  if(gridCells[cell_index + columns + 1].id == ""){
-    checkLinkedElems(cell_index + columns + 1)
+  if (cell_index + columns < gridCellsArray.length) {
+      openCell(cell_index + columns);
   }
 }
-
-// Check bottom left neighbor
-if(!gridCells[cell_index + columns - 1].classList.contains("flagged") && gridCells[cell_index + columns - 1].classList.contains("hidden")){
-  gridCells[cell_index + columns - 1].classList.remove("hidden");
-  gridCells[cell_index + columns - 1].textContent = gridCells[cell_index + columns - 1].id
-  if(gridCells[cell_index + columns - 1].id == ""){
-    checkLinkedElems(cell_index + columns - 1)
-  }
-}
-}
-}
-   
 
 function checkFinish(){
   let allHiddenCells = document.querySelectorAll(".hidden");
@@ -536,4 +414,3 @@ function getCurrentDate() {
 
   return dateString;
 }
-
