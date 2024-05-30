@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+  </head>
+  <body>
+    <!-- add form -->
+    <form id="add-book-form">
+      <input
+        type="text"
+        id="book-name-value"
+        placeholder="Book name*"
+        required
+      />
+      <input
+        type="text"
+        id="author-value"
+        placeholder="Author name*"
+        required
+      />
+      <input
+        type="number"
+        id="pages-value"
+        placeholder="Pages amount*"
+        required
+      />
+      <button type="submit">Add book</button>
+    </form>
+
+    <!-- delete form -->
+    <form id="delete-book-form">
+      <input type="number" id="book-id-value" placeholder="book id*" required />
+      <button type="submit">Delete book</button>
+    </form>
+
+    <button onclick="printBooksTable()">Show books table</button>
+    <table id="books-table"></table>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="library_books_script.js"></script>
+  </body>
+</html>
