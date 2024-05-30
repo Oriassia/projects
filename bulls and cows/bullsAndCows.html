@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bulls and Cows</title>
+    <link rel="stylesheet" href="bullsAndCows.css" />
+  </head>
+  <body>
+    <div class="game_border">
+      <div class="headline">
+        <h1>Bulls and Cows</h1>
+        <br />
+        <p>
+          Discover the hidden code!<br />
+          Click, or use arrow keys, to change your guess in each box.<br />
+          Bulls = correct code, correct position.<br />
+          Cows = correct code, wrong position.
+        </p>
+      </div>
+      <div class="game_grid">
+        <div class="buttons_container">
+          <div>
+            <button id="input1" onclick="plusOne(this)">0</button>
+            <button id="input2" onclick="plusOne(this)">0</button>
+            <button id="input3" onclick="plusOne(this)">0</button>
+            <button id="input4" onclick="plusOne(this)">0</button>
+          </div>
+          <div class="action_buttons">
+            <div><button onclick="goAction()">go</button></div>
+            <div><button onclick="new_game()">new game</button></div>
+            <div><button onclick="give_up()">give up</button></div>
+          </div>
+        </div>
+
+        <div class="text_container">
+          <div>
+            <p id="bulls">bulls:</p>
+          </div>
+          <div>
+            <p id="cows">cows :</p>
+          </div>
+          <div>
+            <p id="turns_history">turns history :</p>
+          </div>
+          <div>
+            <p id="give_up"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/bullsAndCows_script.js"></script>
+  </body>
+</html>

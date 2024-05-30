@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style_calc.css" />
+  </head>
+  <body>
+    <div class="total_calc">
+      <div class="outer_display_line">
+        <div class="inner_display_line">
+          <div>
+            <button class="clear_button" onclick="clear_display()">c</button>
+          </div>
+          <div class="text_line">
+            <span id="display"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons_container">
+        <div class="numbers_card">
+          <div><button id="7" onclick="add_value(this)">7</button></div>
+          <div><button id="8" onclick="add_value(this)">8</button></div>
+          <div><button id="9" onclick="add_value(this)">9</button></div>
+          <div><button id="4" onclick="add_value(this)">4</button></div>
+          <div><button id="5" onclick="add_value(this)">5</button></div>
+          <div><button id="6" onclick="add_value(this)">6</button></div>
+          <div><button id="1" onclick="add_value(this)">1</button></div>
+          <div><button id="2" onclick="add_value(this)">2</button></div>
+          <div><button id="3" onclick="add_value(this)">3</button></div>
+          <div><button id="0" onclick="add_value(this)">0</button></div>
+          <div><button id="." onclick="add_value(this)">.</button></div>
+          <div>
+            <button
+              class="unique_green_toggle"
+              id="="
+              onclick="add_value(this)"
+            >
+              =
+            </button>
+          </div>
+        </div>
+        <!-- toggle class for unique symbols  -->
+        <div class="toggles_card">
+          <div>
+            <button class="toggle" id="+" onclick="add_value(this)">+</button>
+          </div>
+          <div>
+            <button class="toggle" id="-" onclick="add_value(this)">-</button>
+          </div>
+          <div>
+            <button class="toggle" id="*" onclick="add_value(this)">x</button>
+          </div>
+          <div>
+            <button class="toggle" id="/" onclick="add_value(this)">÷</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let totalValue = "";
+      let display = document.querySelector("#display");
+      display.innerText = totalValue;
+
+      function add_value(elem) {
+        if (elem.id == "=") {
+          display.innerText = eval(totalValue);
+        } else if (elem.className == "toggle") {
+          display.innerText = elem.id;
+          totalValue += elem.id;
+        } else {
+          // if elem is number (0-9)
+          clear_display_if_toggle();
+          totalValue += elem.id;
+          display.innerText += elem.id;
+        }
+      }
+      function clear_display() {
+        // total clear display + reset variables
+        totalValue = "";
+        display.innerText = totalValue;
+      }
+
+      function clear_display_if_toggle() {
+        // clear the display if exist unique symbol (cant refer it as a class, and keep the data of totalValue.
+        if (
+          display.innerText == "+" ||
+          display.innerText == "-" ||
+          display.innerText == "*" ||
+          display.innerText == "/"
+        ) {
+          display.innerText = "";
+        }
+      }
+    </script>
+  </body>
+</html>

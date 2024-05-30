@@ -1,0 +1,127 @@
+/* General styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+/* Card container */
+.card-container {
+  perspective: 1000px; /* Adds depth to the flipping effect */
+  display: grid;
+  background-color: green;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  cursor: pointer; /* Add cursor pointer when hovering */
+  margin-inline: auto;
+  margin-top: 50px;
+  padding: 30px;
+  max-width: 800px;
+}
+
+/* Card styles */
+.card {
+  max-width: 150px;
+  min-height: 110px;
+  transition: transform 0.6s ease; /* Smooth transition effect */
+  transform-style: preserve-3d; /* Preserves 3D effect */
+  position: relative;
+}
+
+/* Apply flip effect when the flipped class is added */
+.card.flipped {
+  transform: rotateY(180deg); /* Rotate the card */
+}
+
+.card.temp-flipped {
+  transform: rotateY(180deg); /* Rotate the card */
+}
+
+/* Card front and back faces */
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* Hides the back side of the card */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+}
+
+/* Front face styles */
+.card-front {
+  background-color: #f0f0f0; /* Light gray background color */
+  color: #333; /* Dark text color */
+}
+
+/* Back face styles */
+.card-back {
+  background-color: #5e35b1; /* Purple background color */
+  color: #ffffff; /* White text color */
+  transform: rotateY(180deg); /* Rotates the back side 180 degrees */
+  padding: 10px;
+}
+img {
+  max-width: 100%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 100px;
+}
+
+p {
+  margin-bottom: 50px;
+}
+.input-name {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px; /* Add margin bottom to create space below the input */
+  transition: border-color 0.3s ease;
+}
+
+.input-name:focus {
+  border-color: #4caf50; /* Change border color when input is focused */
+}
+
+button {
+  padding: 10px 20px;
+  margin-inline: 5px;
+  font-size: 18px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #45a049;
+}
+
+.timer-button {
+  display: block;
+  margin-top: 50px;
+  margin-inline: auto;
+}

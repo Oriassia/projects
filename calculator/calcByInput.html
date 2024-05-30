@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <label for="number1">insert number</label>
+    <input type="number" id="number1" />
+    <br />
+    <br />
+    <label for="number2">insert number</label>
+    <input type="number" id="number2" />
+    <br />
+    <br />
+    <button onclick="addNumbers()">+</button>
+    <button onclick="numbersDifference()">-</button>
+    <button onclick="duplicate()">x</button>
+    <button onclick="division()">÷</button>
+    <br />
+    <p for="result">result :</p>
+    <p id="result">ori king</p>
+
+    <table></table>
+
+    <script>
+      let history = [];
+      const num1 = document.querySelector("#number1");
+      const num2 = document.querySelector("#number2");
+      const result_elem = document.querySelector("#result");
+      let Table_elem = document.querySelector("table");
+
+      function addNumbers() {
+        const sum = num1.valueAsNumber + num2.valueAsNumber;
+        result_elem.innerText = sum;
+        AddToHistory("+", sum);
+      }
+
+      function numbersDifference() {
+        let diff = num1.valueAsNumber - num2.valueAsNumber;
+        result_elem.innerHTML = diff;
+        AddToHistory("-", diff);
+      }
+
+      function duplicate() {
+        let dup = num1.valueAsNumber * num2.valueAsNumber;
+        result_elem.innerHTML = dup;
+        AddToHistory("x", dup);
+      }
+
+      function division() {
+        let div = num1.valueAsNumber / num2.valueAsNumber;
+        result_elem.innerHTML = div;
+        AddToHistory("÷", div);
+      }
+
+      function AddToHistory(operation, result) {
+        let new_Obj = {
+          num1: num1.valueAsNumber,
+          operation: operation,
+          num2: num2.valueAsNumber,
+          result: result,
+        };
+        history.push(new_Obj);
+        ShowHistory();
+      }
+
+      function ShowHistory() {
+        Table_elem.innerHTML = `
+          <tr>
+            <th>First number</th>
+            <th>operation</th>
+            <th>seconed number</th>
+            <th>result</th>
+          </tr>
+        `;
+
+        for (const Obj of history) {
+          const new_row = `
+            <tr>
+              <td>${Obj.num1}</td>
+              <td>${Obj.operation}</td>
+              <td>${Obj.num2}</td>
+              <td>${Obj.result}</td>
+            </tr>
+          `;
+
+          Table_elem.innerHTML += new_row;
+        }
+      }
+    </script>
+  </body>
+</html>
