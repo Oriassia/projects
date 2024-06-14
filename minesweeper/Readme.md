@@ -35,14 +35,4 @@ Welcome to the Minesweeper Game! This project is a web-based implementation of t
 
 The game uses the browser's local storage to keep track of the scoreboard, allowing your scores to persist between sessions.
 
-## Getting Started
-
-To run the game locally, simply clone the repository and open `index.html` in your web browser.
-
-```sh
-git clone https://github.com/yourusername/minesweeper-game.git
-cd minesweeper-game
-open index.html
-```
-
 Enjoy playing Minesweeper!
